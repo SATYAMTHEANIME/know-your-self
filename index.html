@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Know Your Self - Discover which fictional character matches your personality.">
+<title>Know Your Self | Character Quiz</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{background:#f8fafc;color:#0f172a;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.phone-container{width:100%;max-width:430px;background:#fff;border-radius:35px;padding:30px;box-shadow:0 20px 40px rgba(0,0,0,.04);display:flex;flex-direction:column;min-height:780px;border:1px solid #f1f5f9}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.logo-area{display:flex;align-items:center;gap:8px}.logo-icon{color:#2563eb;font-size:22px}
+.logo-text h2{font-size:18px;font-weight:800;color:#1e3a8a;line-height:1}.logo-text span{font-size:9px;text-transform:uppercase;color:#94a3b8;font-weight:600;letter-spacing:.5px}
+.lang-btn{background:#f1f5f9;border:0;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:700;color:#475569}
+.screen{display:none;flex-direction:column;flex:1}.screen.active{display:flex}
+.landing{justify-content:center}.sub-tag{text-transform:uppercase;font-size:11px;color:#94a3b8;letter-spacing:1.5px;margin-bottom:12px;font-weight:700;text-align:center}
+.main-title{font-size:44px;font-weight:850;line-height:1.08;margin-bottom:35px;text-align:center}.main-title span{color:#2563eb;position:relative}.main-title span:after{content:"";position:absolute;left:0;bottom:-3px;width:100%;height:3px;background:#2563eb;border-radius:3px}
+.quote-slider-container{min-height:120px;margin-bottom:35px;display:flex;justify-content:center;align-items:center;text-align:center}.quote-box{display:none;width:100%;opacity:0;transform:translateY(8px)}.quote-box.active{display:block;animation:fade .45s forwards}@keyframes fade{to{opacity:1;transform:translateY(0)}}
+.quote-text{font-size:16px;font-style:italic;color:#334155;font-weight:500;line-height:1.5;margin-bottom:8px}.quote-author{font-size:13px;color:#64748b;font-weight:600}
+.btn-primary,.btn-secondary{padding:16px;border-radius:30px;font-size:16px;font-weight:700;width:100%;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px;transition:.2s}
+.btn-primary{background:#2563eb;color:#fff;border:0;box-shadow:0 10px 20px rgba(37,99,235,.12)}.btn-primary:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-secondary{background:#fff;color:#475569;border:1px solid #e2e8f0}.btn-secondary:hover{background:#f8fafc}
+.progress-container{margin-bottom:25px}.progress-text{display:flex;justify-content:space-between;font-size:12px;color:#64748b;font-weight:700;margin-bottom:8px}.progress-bar{height:6px;background:#e2e8f0;border-radius:10px;overflow:hidden}.progress-fill{height:100%;width:0;background:#2563eb;transition:.3s}
+.question-title{font-size:20px;font-weight:750;color:#0f172a;margin-bottom:25px;line-height:1.4}.options-list{display:flex;flex-direction:column;gap:10px;margin-bottom:25px}
+.option-card{background:#fff;border:1px solid #e2e8f0;padding:14px;border-radius:16px;display:flex;align-items:center;cursor:pointer;transition:.2s}.option-card:hover{border-color:#2563eb;background:#f8fafc}.option-card.selected{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 1px #2563eb}
+.option-badge{width:26px;height:26px;border-radius:50%;background:#f1f5f9;display:flex;justify-content:center;align-items:center;font-size:11px;font-weight:800;color:#475569;margin-right:12px;flex-shrink:0}.selected .option-badge{background:#2563eb;color:#fff}
+.option-text{font-size:14px;color:#334155;font-weight:500;line-height:1.35}.nav-actions{display:flex;gap:12px;margin-top:auto}
+.results-header{margin-bottom:18px}.results-header h3{font-size:12px;text-transform:uppercase;color:#94a3b8;letter-spacing:1px;margin-bottom:5px}.results-header h1{font-size:27px;font-weight:850;line-height:1.2}.results-header span{color:#2563eb}.results-sub{font-size:13px;color:#64748b;margin-bottom:18px;line-height:1.4}
+.results-scroll-area{max-height:370px;overflow-y:auto;padding-right:5px;margin-bottom:18px;display:flex;flex-direction:column;gap:9px}.results-scroll-area::-webkit-scrollbar{width:5px}.results-scroll-area::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+.char-row{background:#fff;border:1px solid #e2e8f0;padding:13px;border-radius:16px}.char-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.char-name{font-size:14px;font-weight:750}.char-pct{font-size:14px;font-weight:850;color:#1e3a8a}.progress-track{height:6px;background:#e2e8f0;border-radius:10px;overflow:hidden}.progress-val{height:100%;background:#2563eb;border-radius:10px}.char-traits{font-size:10px;color:#94a3b8;margin-top:6px}
+.disclaimer-box{background:#f8fafc;border-radius:16px;padding:12px;display:flex;gap:10px;margin-bottom:18px;border:1px solid #f1f5f9}.disclaimer-box i{color:#64748b;font-size:14px;margin-top:2px}.disclaimer-text h5{font-size:11px;color:#334155;margin-bottom:2px}.disclaimer-text p{font-size:10px;color:#64748b;line-height:1.4}
+.small-note{font-size:12px;color:#94a3b8;text-align:center;margin-top:12px}
+@media(max-height:700px){.phone-container{min-height:650px;padding:24px}.main-title{font-size:38px;margin-bottom:20px}.quote-slider-container{margin-bottom:20px}}
+</style>
+</head>
+<body>
+<div class="phone-container">
+<header>
+<div class="logo-area"><i class="fa-solid fa-leaf logo-icon"></i><div class="logo-text"><h2>Know Your Self</h2><span>Anime & Movies</span></div></div>
+<button class="lang-btn" type="button"><i class="fa-solid fa-globe"></i> EN</button>
+</header>
 
+<section id="landingScreen" class="screen active landing">
+<span class="sub-tag">Discover More About Yourself</span>
+<h1 class="main-title">Know<br><span>Your Self</span></h1>
+<div class="quote-slider-container">
+<div class="quote-box active"><p class="quote-text">“The only person you need to be better than is who you were yesterday.”</p><p class="quote-author">• Anonymous</p></div>
+<div class="quote-box"><p class="quote-text">“If you don't like your destiny, don't accept it.”</p><p class="quote-author">• Naruto Uzumaki</p></div>
+<div class="quote-box"><p class="quote-text">“With great power comes great responsibility.”</p><p class="quote-author">• Uncle Ben</p></div>
+<div class="quote-box"><p class="quote-text">“I am vengeance. I am the night.”</p><p class="quote-author">• Batman</p></div>
+</div>
+<button class="btn-primary" onclick="startQuiz()">Start Quiz <i class="fa-solid fa-arrow-right"></i></button>
+<p class="small-note">Real questions. Deeper answers.</p>
+</section>
+
+<section id="quizScreen" class="screen">
+<div class="progress-container"><div class="progress-text"><span id="questionNumDisplay"></span><span id="progressPercentDisplay">0%</span></div><div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div></div>
+<h2 id="questionText" class="question-title"></h2>
+<div id="optionsList" class="options-list"></div>
+<div class="nav-actions"><button id="backBtn" class="btn-secondary" onclick="previousQuestion()">Back</button><button id="nextBtn" class="btn-primary" onclick="nextQuestion()">Next <i class="fa-solid fa-arrow-right"></i></button></div>
+</section>
+
+<section id="resultsScreen" class="screen">
+<div class="results-header"><h3>Your Character Match</h3><h1>You matched with <span id="topCharacter">...</span></h1></div>
+<p class="results-sub">Your answers created this personality profile. The percentages show how closely your choices matched each character's assigned traits.</p>
+<div id="resultsList" class="results-scroll-area"></div>
+<div class="disclaimer-box"><i class="fa-solid fa-circle-info"></i><div class="disclaimer-text"><h5>Disclaimer</h5><p>These characters belong to their respective owners. This quiz is a fan-made personality experience and is not an official psychological assessment.</p></div></div>
+<button class="btn-primary" onclick="restartQuiz()">Take Quiz Again <i class="fa-solid fa-rotate-right"></i></button>
+</section>
+</div>
+
+<script>
+const quotes=document.querySelectorAll(".quote-box");
+let currentQuoteIndex=0;
+setInterval(()=>{quotes[currentQuoteIndex].classList.remove("active");currentQuoteIndex=(currentQuoteIndex+1)%quotes.length;quotes[currentQuoteIndex].classList.add("active")},4000);
+
+const quizData=[
+{q:"Aapko jab thoda free time milta hai, toh mind ko refresh karne ke liye aap kya chunenge?",options:[
+{text:"Akele baithkar dimaag ko shaant rakhna ya aage ka target plan karna",types:["Eren","Light","Batman","Sasuke","Levi"]},
+{text:"Bina kisi tension ke dosto se milna, maze lena ya ghoomna-phirna",types:["Gojo","Naruto","Luffy","Saitama","Thor"]},
+{text:"Social media, movies ya games khelkar normal, sukoon bhara chill",types:["SpiderMan","Kakashi","Zoro","Kaneki","L"]},
+{text:"Kisi gehre aur secretive project par akele mein kaam karna",types:["IronMan","Joker","Thanos","WalterWhite","Sukuna"]}]},
+{q:"Agar life mein koi bohot bada unexpected challenge aa jaye, toh aapka first step kya hoga?",options:[
+{text:"Bina dare us challenge par toot padna, chahe jo anjaam ho",types:["Eren","Luffy","Zoro","Thor","Sukuna"]},
+{text:"Haste hue handle karna aur dosto ko confidence dena",types:["Gojo","Naruto","SpiderMan","Saitama","IronMan"]},
+{text:"Pehle risk analyze karke poori planning aur backup ready karna",types:["Light","Batman","Thanos","WalterWhite","L"]},
+{text:"Chupchaap situation ko monitor karna aur akele handle karne ki sochna",types:["Sasuke","Levi","Kakashi","Kaneki","Thanos"]}]},
+{q:"Aapke mutabik ek behtareen insaan mein sabse badi quality kya honi chahiye?",options:[
+{text:"Apne raste par ziddi rehna aur bandishon ko tod dena",types:["Eren","Luffy","Sasuke","Zoro","Sukuna"]},
+{text:"Bina kisi ke darr ke jeena aur apni taqat par poora yakeen hona",types:["Gojo","Saitama","Thor","Thanos","IronMan"]},
+{text:"Tez dimaag hona jo system ko samajh aur badal sake",types:["Light","Batman","WalterWhite","L","Kakashi"]},
+{text:"Duniya ke liye kindness rakhna aur responsibility nibhana",types:["SpiderMan","Naruto","Kaneki","Levi","Thor"]}]},
+{q:"Kisi aisi jagah par jahan sab aapko hi notice kar rahe hon, aap kaisa react karenge?",options:[
+{text:"Mujhe logon ke dhyan se koi lena-dena nahi, apna kaam karunga",types:["Eren","Saitama","Levi","Zoro","Sukuna"]},
+{text:"Shauk se accept karunga, attention banna toh mera style hai",types:["Gojo","Luffy","IronMan","Thor","Joker"]},
+{text:"Unke har action aur dimaag ko observe karne mein lag jaunga",types:["Light","Batman","L","Thanos","WalterWhite"]},
+{text:"Thoda formal rahunga, par doston ke saath normal rahunga",types:["SpiderMan","Naruto","Kakashi","Kaneki","Sasuke"]}]},
+{q:"Aapke liye sacchi dosti nibhane ka kya matlab hota hai?",options:[
+{text:"Unki azaadi aur bhale ke liye duniya se bhid jaana",types:["Eren","Naruto","Luffy","Zoro","Sasuke"]},
+{text:"Unhe pareshan karna, par zarurat par sabse strong support banna",types:["Gojo","Saitama","Thor","IronMan","Kakashi"]},
+{text:"Apne close logon ki security chupchaap ensure karna",types:["Batman","Levi","Kakashi","L","SpiderMan"]},
+{text:"Dosti apni jagah hai, par goals aur ambitions pehle aate hain",types:["Light","Thanos","WalterWhite","Sukuna","Joker"]}]},
+{q:"Aapko kis tarah ka environment sabse zyada sukoon deta hai?",options:[
+{text:"Khula aasman ya aisi jagah jahan koi rok-tok na ho",types:["Eren","Luffy","Zoro","Saitama","Thor"]},
+{text:"Zabardast crowd, doston ka shor aur lively chal-pahal",types:["Gojo","Naruto","IronMan","Joker","SpiderMan"]},
+{text:"Ek silent room jahan theek se dimaag lagaya ja sake",types:["Light","Batman","L","WalterWhite","Thanos"]},
+{text:"Nature ke beech chupchaap book reading ya akele rehna",types:["Levi","Kakashi","Kaneki","Sasuke","Sukuna"]}]},
+{q:"Agar aapki koi badi calculation galat ho jaye, toh aap kya karenge?",options:[
+{text:"Usko chhodkar instant force ke saath naya rasta nikalunga",types:["Eren","Luffy","Zoro","Thor","Sukuna"]},
+{text:"Mazaak mein uda dunga aur dobara cool hokar try karunga",types:["Gojo","Saitama","SpiderMan","Naruto","IronMan"]},
+{text:"Logically analyze karunga ki kahan chook hui aur control wapas lunga",types:["Light","Batman","L","Thanos","WalterWhite"]},
+{text:"Galti ke reasons samajhkar quietly self-correct karunga",types:["Sasuke","Levi","Kakashi","Kaneki","Zoro"]}]},
+{q:"Aapki sabse badi kamzori inmein se kya ho sakti hai?",options:[
+{text:"Goals ko paane ke liye behad ziddi ho jaana",types:["Eren","Light","Thanos","WalterWhite","Sasuke"]},
+{text:"Zarurat se zyada overconfident ho jaana",types:["Gojo","Sukuna","IronMan","Thor","Luffy"]},
+{text:"Kisi par jaldi trust na karna aur sab check karna",types:["Batman","L","Levi","Kakashi","Zoro"]},
+{text:"Dusron ki chinta mein khud ka emotional nuksan kar lena",types:["SpiderMan","Naruto","Kaneki","Saitama","Thor"]}]},
+{q:"Aapka ultimate target life mein kya hai?",options:[
+{text:"Absolute freedom. Kisi ke control mein na rehna",types:["Eren","Luffy","Zoro","Saitama","Thor"]},
+{text:"Duniya mein sabse capable aur unstoppable insaan banna",types:["Gojo","Sukuna","Thanos","WalterWhite","IronMan"]},
+{text:"Poore kharab system ko reset karke nayi tarah chalana",types:["Light","Batman","Thanos","L","Sasuke"]},
+{text:"Apne logon ki raksha karna aur safe society banana",types:["SpiderMan","Naruto","Kakashi","Levi","Kaneki"]}]},
+{q:"Jab gussa extreme point par ho, tab aap kya karte hain?",options:[
+{text:"Mera gussa ek unstoppable force ban jata hai",types:["Eren","Luffy","Thor","Sukuna","Joker"]},
+{text:"Sarcastic baatein karke situation ko halka kar deta hoon",types:["Gojo","Saitama","IronMan","SpiderMan","Kakashi"]},
+{text:"Silent ho jata hoon aur dimaag mein plan chalne lagta hai",types:["Light","Batman","L","Thanos","WalterWhite"]},
+{text:"Gusse ko chhupa kar cold response deta hoon",types:["Levi","Sasuke","Kaneki","Zoro","Thanos"]}]},
+{q:"Aapko kis genre ki story sabse zyada attract karti hai?",options:[
+{text:"Intense aur dark themes, jahan heavy action ho",types:["Eren","Zoro","Levi","Sukuna","Joker"]},
+{text:"Fun adventures aur high-energy fights",types:["Gojo","Naruto","Luffy","Saitama","Thor"]},
+{text:"Mind games, psychological suspense aur intellectual plots",types:["Light","Batman","L","WalterWhite","Thanos"]},
+{text:"Relatable life stories, mixed emotion aur hero struggles",types:["SpiderMan","Kakashi","Kaneki","Sasuke","IronMan"]}]},
+{q:"Agar aapko ek god-like feature chunna ho, toh kya chunenge?",options:[
+{text:"Unstoppable physical force aur pure control",types:["Eren","Luffy","Zoro","Saitama","Sukuna"]},
+{text:"Absolute raw energy aur rule manipulation",types:["Gojo","Thor","IronMan","Thanos","Light"]},
+{text:"Unbeatable core intelligence aur predictive strategy",types:["Light","Batman","L","WalterWhite","Kakashi"]},
+{text:"Extreme speed, survival instincts aur danger sensing",types:["SpiderMan","Levi","Sasuke","Kaneki","Naruto"]}]}
+];
+
+const characterMeta={
+Eren:{name:"Eren Yeager",traits:"Intense • Freedom Driven • Unstoppable"},
+Gojo:{name:"Gojo Satoru",traits:"Godlike • Fearless • Unfiltered"},
+Light:{name:"Light Yagami",traits:"Strategic • Calculative • Mastermind"},
+SpiderMan:{name:"Spider-Man (Peter Parker)",traits:"Kind • Selfless • Relatable"},
+Naruto:{name:"Naruto Uzumaki",traits:"Hopeful • Persistent • Friendly"},
+Luffy:{name:"Monkey D. Luffy",traits:"Ambitious • Joyful • Pure Loyalty"},
+Sasuke:{name:"Sasuke Uchiha",traits:"Lone Wolf • Focused • Cold"},
+Zoro:{name:"Roronoa Zoro",traits:"Disciplined • Focused • Hardcore"},
+Saitama:{name:"Saitama",traits:"Overpowered • Casual • Unbothered"},
+Levi:{name:"Levi Ackerman",traits:"Precise • Disciplined • Highly Skilled"},
+Kaneki:{name:"Ken Kaneki",traits:"Tragic • Complex • Resilient"},
+Sukuna:{name:"Ryomen Sukuna",traits:"Ruthless • Dominant • Malevolent"},
+Kakashi:{name:"Kakashi Hatake",traits:"Chill • Wise • Experienced"},
+L:{name:"L Lawliet",traits:"Eccentric • Analytical • Genius"},
+IronMan:{name:"Iron Man (Tony Stark)",traits:"Genius • Inventive • Heroic"},
+Batman:{name:"Batman (Bruce Wayne)",traits:"Strategic • Determined • Unbreakable"},
+Joker:{name:"The Joker",traits:"Chaotic • Unpredictable • Unconventional"},
+Thor:{name:"Thor Odinson",traits:"Mighty • Warrior • Courageous"},
+Thanos:{name:"Thanos",traits:"Visionary • Determined • Unshakable"},
+WalterWhite:{name:"Walter White",traits:"Pragmatic • Calculating • Prideful"}
+};
+
+let currentQuestionIndex=0;
+let userSelections=Array(quizData.length).fill(null);
+
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active")}
+function startQuiz(){currentQuestionIndex=0;userSelections.fill(null);showScreen("quizScreen");loadQuestion()}
+function loadQuestion(){
+const q=quizData[currentQuestionIndex];
+document.getElementById("questionText").textContent=q.q;
+document.getElementById("questionNumDisplay").textContent=`Question ${currentQuestionIndex+1} of ${quizData.length}`;
+const pct=Math.round((currentQuestionIndex/quizData.length)*100);
+document.getElementById("progressPercentDisplay").textContent=`${pct}%`;
+document.getElementById("progressFill").style.width=`${pct}%`;
+const list=document.getElementById("optionsList");list.innerHTML="";
+q.options.forEach((option,i)=>{
+const card=document.createElement("div");card.className="option-card"+(userSelections[currentQuestionIndex]===i?" selected":"");
+card.innerHTML=`<span class="option-badge">${String.fromCharCode(65+i)}</span><span class="option-text">${option.text}</span>`;
+card.onclick=()=>selectOption(i);list.appendChild(card);
+});
+document.getElementById("backBtn").disabled=currentQuestionIndex===0;
+document.getElementById("nextBtn").innerHTML=currentQuestionIndex===quizData.length-1?'See Results <i class="fa-solid fa-chart-simple"></i>':'Next <i class="fa-solid fa-arrow-right"></i>';
+}
+function selectOption(i){userSelections[currentQuestionIndex]=i;loadQuestion()}
+function previousQuestion(){if(currentQuestionIndex>0){currentQuestionIndex--;loadQuestion()}}
+function nextQuestion(){
+if(userSelections[currentQuestionIndex]===null){alert("Please select an option first.");return}
+if(currentQuestionIndex<quizData.length-1){currentQuestionIndex++;loadQuestion()}else{showResults()}
+}
+function showResults(){
+const scores={};Object.keys(characterMeta).forEach(k=>scores[k]=0);
+userSelections.forEach((choice,qi)=>{if(choice!==null)quizData[qi].options[choice].types.forEach(type=>scores[type]++)});
+const maxPossible=quizData.length;
+const results=Object.entries(scores).map(([key,score])=>({key,score,pct:Math.round(score/maxPossible*100)})).sort((a,b)=>b.score-a.score);
+const top=results[0];
+document.getElementById("topCharacter").textContent=characterMeta[top.key].name;
+const list=document.getElementById("resultsList");list.innerHTML="";
+results.forEach(r=>{
+const meta=characterMeta[r.key];
+const row=document.createElement("div");row.className="char-row";
+row.innerHTML=`<div class="char-top"><span class="char-name">${meta.name}</span><span class="char-pct">${r.pct}%</span></div><div class="progress-track"><div class="progress-val" style="width:${r.pct}%"></div></div><div class="char-traits">${meta.traits}</div>`;
+list.appendChild(row);
+});
+showScreen("resultsScreen");
+}
+function restartQuiz(){showScreen("landingScreen")}
+</script>
+</body>
+</html>
