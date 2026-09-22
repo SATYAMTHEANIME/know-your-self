@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Know Your Self - a 20-question character personality match quiz.">
+<title>Know Your Self | Character Match</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{background:#f7f8fb;color:#101828;min-height:100vh;padding:18px;display:flex;justify-content:center}
+.phone{width:100%;max-width:470px;min-height:calc(100vh - 36px);background:#fff;border:1px solid #e7e9ee;border-radius:30px;padding:28px;box-shadow:0 18px 50px rgba(16,24,40,.07);display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+.brand{display:flex;align-items:center;gap:9px}
+.brand i{color:#2563eb;font-size:20px}
+.brand h2{font-size:18px;line-height:1;font-weight:850}
+.brand span{display:block;font-size:9px;letter-spacing:1.1px;text-transform:uppercase;color:#98a2b3;margin-top:4px}
+.edition{font-size:10px;font-weight:800;color:#475467;background:#f2f4f7;padding:8px 11px;border-radius:20px}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.active{display:flex}
+.hero{justify-content:center;text-align:center}
+.eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#98a2b3;text-transform:uppercase;margin-bottom:14px}
+h1{font-size:46px;line-height:1.03;letter-spacing:-2px;font-weight:900}
+h1 span{color:#2563eb}
+.hero-copy{font-size:14px;line-height:1.65;color:#667085;margin:18px auto 26px;max-width:360px}
+.rule{height:1px;background:#eaecf0;margin:4px 0 24px}
+.quote-slider{position:relative;min-height:118px;display:flex;align-items:center;justify-content:center}
+.quote-box{display:none;width:100%;animation:quoteFade .45s ease}
+.quote-box.active{display:block}
+@keyframes quoteFade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.quote{font-family:Georgia,serif;font-size:18px;line-height:1.45;color:#344054;margin-bottom:8px}
+.quote-by{font-size:10px;color:#98a2b3;letter-spacing:1px;text-transform:uppercase}
+.primary,.secondary{width:100%;border-radius:18px;padding:15px 18px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.primary{border:0;background:#2563eb;color:white;box-shadow:0 10px 22px rgba(37,99,235,.18)}
+.secondary{border:1px solid #d0d5dd;background:white;color:#344054}
+.note{font-size:10px;color:#98a2b3;margin-top:12px;line-height:1.5}
+.progress{margin-bottom:24px}
+.progress-top{display:flex;justify-content:space-between;color:#667085;font-size:11px;font-weight:800;margin-bottom:8px}
+.track{height:7px;background:#eaecf0;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:#2563eb;border-radius:20px;transition:width .25s}
+.question{font-size:22px;line-height:1.35;font-weight:850;margin-bottom:22px;letter-spacing:-.4px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{border:1px solid #dfe3e8;border-radius:17px;padding:14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:.18s;background:#fff}
+.option:hover{border-color:#9cb7f5;background:#f8faff}
+.option.selected{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 1px #2563eb}
+.badge{width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:#f2f4f7;color:#475467;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+.selected .badge{background:#2563eb;color:#fff}
+.option-text{font-size:14px;line-height:1.4;color:#344054;font-weight:550;padding-top:3px}
+.nav{display:flex;gap:10px;margin-top:auto;padding-top:20px}
+.nav button{flex:1}
+.results-title{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#98a2b3;font-weight:850}
+.results-head h2{font-size:29px;line-height:1.15;margin:5px 0 8px;font-weight:900}
+.results-head h2 span{color:#2563eb}
+.results-head p{font-size:12px;line-height:1.55;color:#667085;margin-bottom:18px}
+.results{display:flex;flex-direction:column;gap:9px;max-height:560px;overflow:auto;padding-right:4px;margin-bottom:18px}
+.card{border:1px solid #e4e7ec;border-radius:17px;padding:13px;background:#fff}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rank{font-size:10px;font-weight:900;color:#2563eb;background:#eff6ff;border-radius:20px;padding:4px 7px}
+.name{font-size:14px;font-weight:850}
+.series{font-size:10px;color:#98a2b3;margin-top:2px}
+.match{font-size:14px;font-weight:900;color:#1d4ed8}
+.mini{height:6px;background:#eaecf0;border-radius:20px;overflow:hidden;margin:9px 0 7px}
+.mini div{height:100%;background:#2563eb;border-radius:20px}
+.traits{font-size:10px;color:#667085}
+.disclaimer{border:1px solid #eaecf0;background:#f8fafc;border-radius:16px;padding:12px;margin-bottom:15px;font-size:10px;line-height:1.5;color:#667085}
+.disclaimer strong{display:block;color:#344054;margin-bottom:3px;font-size:10px}
+@media(max-width:500px){body{padding:0;background:#fff}.phone{border:0;border-radius:0;box-shadow:none;min-height:100vh;padding:24px}h1{font-size:42px}}
+</style>
+</head>
+<body>
+<div class="phone">
+<header>
+  <div class="brand"><i class="fa-solid fa-compass"></i><div><h2>Know Your Self</h2><span>Character Match</span></div></div>
+  <div class="edition">ENGLISH</div>
+</header>
+
+<section id="landing" class="screen active hero">
+  <div class="eyebrow">20 QUESTIONS. 63 CHARACTERS.</div>
+  <h1>Know<br><span>Your Self</span></h1>
+  <p class="hero-copy">Answer questions about choices, pressure, trust, ambition, failure, relationships, independence, and the life you want to build.</p>
+
+  <div class="quote-wrap">
+    <div class="quote-line"></div>
+    <div class="quote-label">CHARACTER QUOTES</div>
+
+    <div class="quote-slider">
+      <div class="quote-box active">
+        <div class="quote">“I don't want to conquer anything. It's just that the person with the most freedom on the sea is the Pirate King.”</div>
+        <div class="quote-by">— Monkey D. Luffy</div>
+      </div>
+      <div class="quote-box">
+        <div class="quote">“Whatever you lose, you'll find it again. But what you throw away you'll never get back.”</div>
+        <div class="quote-by">— Kenshin Himura</div>
+      </div>
+      <div class="quote-box">
+        <div class="quote">“The world isn't perfect. But it's there for us, doing the best it can.”</div>
+        <div class="quote-by">— Roy Mustang</div>
+      </div>
+      <div class="quote-box">
+        <div class="quote">“Sometimes the questions are complicated and the answers are simple.”</div>
+        <div class="quote-by">— Dr. Seuss</div>
+      </div>
+    </div>
+
+    <div class="quote-line"></div>
+  </div>
+
+  <div style="height:26px"></div>
+  <button class="primary" onclick="startQuiz()">Start Quiz <i class="fa-solid fa-arrow-right"></i></button>
+  <div class="note">20 personal questions. 63 characters. Only your top 6 matches appear.</div>
+</section>
+
+<section id="quiz" class="screen">
+  <div class="progress">
+    <div class="progress-top"><span id="qnum">Question 1 of 20</span><span id="pct">0%</span></div>
+    <div class="track"><div id="fill" class="fill"></div></div>
+  </div>
+  <div id="question" class="question"></div>
+  <div id="options" class="options"></div>
+  <div class="nav">
+    <button id="back" class="secondary" onclick="backQuestion()">Back</button>
+    <button id="next" class="primary" onclick="nextQuestion()">Next <i class="fa-solid fa-arrow-right"></i></button>
+  </div>
+</section>
+
+<section id="results" class="screen">
+  <div class="results-head">
+    <div class="results-title">Your Top 6 Matches</div>
+    <h2>Your closest match is <span id="winner">...</span></h2>
+    <p>These percentages represent similarity between your answer pattern and the quiz's character profiles. They are for entertainment, not a scientific personality measurement.</p>
+  </div>
+  <div id="resultsList" class="results"></div>
+  <div class="disclaimer">
+    <strong>Fan-made disclaimer</strong>
+    The characters and franchises belong to their respective creators and rights holders. This website is an unofficial fan-made personality experience. Napoleon Bonaparte is a historical figure; his profile is based on broad documented historical traits and is not a psychological assessment. The Crown entries refer to the dramatized series characters.
+  </div>
+  <button class="primary" onclick="restart()">Take the Quiz Again <i class="fa-solid fa-rotate-right"></i></button>
+</section>
+</div>
+
+<script>
+
+const quoteBoxes = document.querySelectorAll('.quote-box');
+let quoteIndex = 0;
+setInterval(() => {
+  if (!quoteBoxes.length) return;
+  quoteBoxes[quoteIndex].classList.remove('active');
+  quoteIndex = (quoteIndex + 1) % quoteBoxes.length;
+  quoteBoxes[quoteIndex].classList.add('active');
+}, 4200);
+
+const quizData = [{"q": "When a major decision could change your life, what do you naturally do first?", "options": [{"text": "I ask what choice gives me the most freedom."}, {"text": "I think about who will be affected and protect my relationships."}, {"text": "I compare the long-term consequences before choosing."}, {"text": "I trust my instincts and move before fear can stop me."}], "vectors": [[9, 2, 3, 2, 3, 5, 4, 7, 2, 6], [3, 9, 3, 3, 9, 5, 6, 5, 2, 4], [2, 3, 9, 10, 3, 4, 8, 6, 8, 3], [4, 4, 5, 3, 5, 10, 5, 8, 4, 4]]}, {"q": "When someone disappoints you deeply, what happens inside you?", "options": [{"text": "I distance myself and become much harder to reach."}, {"text": "I try to understand why they did it, even if it hurts."}, {"text": "I remember the lesson and become more careful next time."}, {"text": "I confront the situation directly instead of carrying it quietly."}], "vectors": [[7, 4, 2, 4, 3, 3, 6, 6, 5, 4], [2, 10, 2, 4, 10, 5, 5, 7, 2, 4], [2, 4, 7, 9, 3, 4, 8, 6, 8, 3], [3, 4, 5, 3, 4, 10, 5, 7, 4, 4]]}, {"q": "What matters most to you when nobody is watching?", "options": [{"text": "Living according to my own values."}, {"text": "Being someone the people I love can rely on."}, {"text": "Becoming exceptionally capable at something."}, {"text": "Knowing that I had the courage to act when it mattered."}], "vectors": [[10, 4, 4, 4, 5, 6, 5, 7, 2, 7], [2, 10, 3, 3, 10, 6, 5, 6, 2, 4], [2, 3, 10, 10, 3, 4, 9, 5, 8, 4], [4, 4, 4, 3, 4, 10, 5, 8, 3, 5]]}, {"q": "You suddenly have a free year with no obligations. What sounds most meaningful?", "options": [{"text": "Travel, explore, and experience life without a fixed script."}, {"text": "Build something with people I care about."}, {"text": "Master a difficult skill and push my limits."}, {"text": "Study the world, create a plan, and reinvent myself."}], "vectors": [[10, 3, 5, 4, 5, 7, 3, 9, 2, 9], [3, 10, 4, 4, 10, 5, 5, 7, 2, 7], [3, 3, 9, 10, 3, 5, 9, 7, 8, 9], [5, 4, 8, 8, 4, 9, 7, 10, 5, 8]]}, {"q": "When you fail at something you genuinely cared about, what is your honest reaction?", "options": [{"text": "I hate feeling trapped by the failure, so I search for another path."}, {"text": "I feel it deeply, then lean on people I trust and keep going."}, {"text": "I dissect the mistake until I understand exactly what happened."}, {"text": "I get angry at first, then turn that energy into action."}], "vectors": [[6, 6, 4, 8, 5, 6, 6, 9, 3, 5], [3, 10, 4, 4, 10, 7, 5, 8, 2, 5], [2, 3, 10, 10, 3, 5, 10, 6, 9, 4], [4, 4, 6, 3, 3, 10, 6, 9, 5, 6]]}, {"q": "Which kind of person earns your respect fastest?", "options": [{"text": "Someone who refuses to be controlled by others."}, {"text": "Someone who stays loyal when things become difficult."}, {"text": "Someone whose mind is several steps ahead."}, {"text": "Someone who stays brave when everyone else hesitates."}], "vectors": [[10, 4, 5, 4, 4, 7, 5, 7, 2, 6], [3, 10, 4, 4, 10, 7, 6, 6, 2, 5], [2, 4, 8, 10, 3, 5, 9, 6, 9, 4], [4, 4, 4, 3, 4, 10, 5, 8, 4, 5]]}, {"q": "In a group, which role do you naturally fall into?", "options": [{"text": "The independent one who challenges the direction."}, {"text": "The person keeping everyone together."}, {"text": "The strategist who notices patterns and plans ahead."}, {"text": "The one who steps forward when action is needed."}], "vectors": [[9, 3, 4, 5, 4, 6, 5, 8, 2, 6], [3, 10, 3, 4, 10, 6, 6, 7, 2, 5], [2, 4, 9, 10, 3, 5, 9, 6, 9, 5], [4, 4, 5, 3, 4, 10, 6, 9, 5, 5]]}, {"q": "If you could remove one fear from your life, which would you choose?", "options": [{"text": "Fear of losing my independence."}, {"text": "Fear of losing people I love."}, {"text": "Fear of making the wrong decision."}, {"text": "Fear of freezing when a decisive moment arrives."}], "vectors": [[10, 3, 4, 4, 4, 5, 5, 8, 2, 6], [2, 10, 3, 4, 10, 7, 6, 7, 2, 5], [2, 3, 9, 10, 3, 4, 9, 6, 8, 4], [4, 4, 5, 3, 4, 10, 6, 9, 5, 5]]}, {"q": "How do you usually handle a conflict with someone close to you?", "options": [{"text": "I need space before I can talk honestly."}, {"text": "I try to repair the relationship if trust can be rebuilt."}, {"text": "I ask questions and work out what actually caused it."}, {"text": "I say what needs to be said, even if the conversation is uncomfortable."}], "vectors": [[8, 4, 3, 5, 4, 4, 6, 7, 4, 5], [3, 10, 3, 4, 10, 6, 5, 7, 2, 6], [2, 4, 9, 10, 4, 5, 9, 6, 8, 4], [3, 4, 5, 3, 4, 10, 6, 8, 5, 5]]}, {"q": "What kind of achievement would make you privately proud?", "options": [{"text": "Building a life that feels truly mine."}, {"text": "Knowing people can count on me."}, {"text": "Becoming excellent at something most people cannot do."}, {"text": "Doing something difficult that once scared me."}], "vectors": [[10, 4, 6, 4, 5, 7, 5, 8, 2, 7], [3, 10, 4, 4, 10, 7, 6, 7, 2, 6], [2, 4, 10, 10, 3, 5, 10, 6, 9, 5], [4, 4, 5, 3, 4, 10, 6, 9, 4, 6]]}, {"q": "When you enter an unfamiliar place, what do you notice first?", "options": [{"text": "How free or restricted I feel there."}, {"text": "Who seems trustworthy and who needs help."}, {"text": "How the system works and who has influence."}, {"text": "Where the risks and opportunities are."}], "vectors": [[9, 3, 4, 4, 5, 5, 4, 8, 2, 7], [3, 10, 3, 4, 10, 6, 6, 7, 2, 6], [2, 4, 10, 10, 3, 5, 9, 7, 9, 5], [4, 4, 7, 4, 4, 10, 6, 10, 6, 6]]}, {"q": "If your friends described your strongest quality, what would you hope they say?", "options": [{"text": "Independent."}, {"text": "Loyal."}, {"text": "Sharp-minded."}, {"text": "Brave."}], "vectors": [[10, 4, 4, 4, 5, 6, 5, 8, 2, 7], [3, 10, 3, 4, 10, 7, 6, 7, 2, 5], [2, 4, 10, 10, 3, 5, 9, 6, 9, 4], [4, 4, 4, 3, 4, 10, 5, 9, 4, 6]]}, {"q": "What do you do when you have too many thoughts and nobody around?", "options": [{"text": "I disappear into my own world and think about what I really want."}, {"text": "I think about the people who matter to me."}, {"text": "I organize the thoughts into patterns and possibilities."}, {"text": "I turn the restless energy into a project or action."}], "vectors": [[9, 4, 4, 5, 5, 6, 4, 8, 2, 10], [3, 10, 4, 4, 10, 7, 6, 7, 2, 6], [2, 3, 10, 10, 3, 5, 9, 6, 9, 7], [5, 4, 6, 4, 4, 10, 6, 10, 5, 9]]}, {"q": "Suppose you discover a powerful opportunity that could change your future, but it carries a serious cost. What wins?", "options": [{"text": "My need to choose my own path."}, {"text": "My responsibility toward the people affected."}, {"text": "My calculation of whether the outcome is worth it."}, {"text": "My willingness to take the risk if the goal matters enough."}], "vectors": [[10, 4, 5, 5, 5, 7, 5, 9, 2, 7], [3, 10, 4, 4, 10, 7, 6, 7, 2, 6], [2, 4, 10, 10, 3, 5, 9, 6, 9, 5], [4, 4, 6, 4, 4, 10, 6, 10, 5, 7]]}, {"q": "Which statement feels closest to your view of life?", "options": [{"text": "A life without choice does not feel like a life."}, {"text": "Strength means staying beside people when it is hardest."}, {"text": "Understanding the game changes how you survive it."}, {"text": "Sometimes you have to act before you feel ready."}], "vectors": [[10, 4, 4, 5, 5, 7, 5, 9, 2, 7], [3, 10, 4, 4, 10, 7, 6, 8, 2, 6], [2, 4, 10, 10, 3, 5, 9, 6, 9, 5], [4, 4, 6, 4, 4, 10, 6, 10, 5, 7]]}, {"q": "When you are under pressure for a long time, what changes most?", "options": [{"text": "I become impatient with rules and restrictions."}, {"text": "I become protective of the people around me."}, {"text": "I become more controlled, analytical, and private."}, {"text": "I become more intense and action-oriented."}], "vectors": [[9, 3, 4, 4, 4, 6, 4, 8, 2, 7], [3, 10, 4, 4, 10, 7, 6, 7, 2, 5], [2, 4, 10, 10, 3, 5, 10, 5, 9, 4], [4, 4, 6, 3, 4, 10, 6, 10, 5, 6]]}, {"q": "What kind of legacy would matter to you?", "options": [{"text": "That I lived on my own terms."}, {"text": "That I made life better for people around me."}, {"text": "That I changed something through ideas or achievement."}, {"text": "That I had the courage to do what others avoided."}], "vectors": [[10, 4, 5, 4, 5, 7, 4, 9, 2, 8], [3, 10, 4, 4, 10, 7, 6, 7, 2, 7], [2, 4, 10, 10, 3, 5, 9, 6, 9, 6], [4, 4, 6, 4, 4, 10, 6, 10, 5, 7]]}, {"q": "Someone gives you advice that conflicts with your own judgment. What do you do?", "options": [{"text": "I listen, but I ultimately choose my own direction."}, {"text": "I consider their feelings and the trust between us."}, {"text": "I test their reasoning against my own evidence."}, {"text": "I make the call and accept responsibility for it."}], "vectors": [[10, 4, 4, 4, 5, 6, 5, 8, 2, 7], [3, 10, 4, 4, 10, 7, 6, 7, 2, 6], [2, 4, 10, 10, 3, 5, 9, 6, 9, 5], [4, 4, 6, 3, 4, 10, 6, 10, 5, 6]]}, {"q": "What is hardest for you to compromise on?", "options": [{"text": "My independence."}, {"text": "My loyalty."}, {"text": "My standards and reasoning."}, {"text": "My principles when the stakes are high."}], "vectors": [[10, 4, 4, 4, 5, 6, 5, 8, 2, 7], [3, 10, 4, 4, 10, 7, 6, 7, 2, 6], [2, 4, 10, 10, 3, 5, 9, 6, 9, 5], [4, 4, 6, 3, 4, 10, 6, 10, 5, 6]]}, {"q": "At the end of a difficult year, what would make you feel that it was worth it?", "options": [{"text": "I became more free and more certain of who I am."}, {"text": "The people I care about and I made it through together."}, {"text": "I learned enough to become a much stronger version of myself."}, {"text": "I faced something difficult instead of running from it."}], "vectors": [[10, 4, 4, 4, 5, 7, 5, 8, 2, 7], [3, 10, 4, 4, 10, 7, 6, 7, 2, 6], [2, 4, 10, 10, 3, 5, 9, 6, 9, 5], [4, 4, 6, 3, 4, 10, 6, 10, 5, 6]]}];
+const characterMeta = {"Monkey D. Luffy": {"name": "Monkey D. Luffy", "series": "One Piece", "v": [10, 10, 7, 4, 8, 10, 5, 10, 3, 8], "traits": "Free-spirited • Loyal • Fearless"}, "Roronoa Zoro": {"name": "Roronoa Zoro", "series": "One Piece", "v": [8, 9, 8, 4, 6, 10, 10, 7, 6, 4], "traits": "Disciplined • Loyal • Relentless"}, "Sanji": {"name": "Sanji", "series": "One Piece", "v": [7, 9, 7, 6, 9, 9, 8, 9, 4, 8], "traits": "Protective • Skilled • Compassionate"}, "Nico Robin": {"name": "Nico Robin", "series": "One Piece", "v": [7, 8, 6, 10, 8, 7, 9, 8, 7, 9], "traits": "Observant • Intelligent • Resilient"}, "Naruto Uzumaki": {"name": "Naruto Uzumaki", "series": "Naruto", "v": [9, 10, 8, 5, 10, 9, 6, 9, 3, 7], "traits": "Persistent • Warm • Hopeful"}, "Sasuke Uchiha": {"name": "Sasuke Uchiha", "series": "Naruto", "v": [8, 6, 9, 9, 5, 9, 9, 7, 8, 5], "traits": "Independent • Focused • Intense"}, "Kakashi Hatake": {"name": "Kakashi Hatake", "series": "Naruto", "v": [6, 9, 6, 9, 7, 8, 9, 9, 7, 7], "traits": "Calm • Strategic • Adaptable"}, "Itachi Uchiha": {"name": "Itachi Uchiha", "series": "Naruto", "v": [5, 10, 8, 10, 8, 9, 10, 7, 8, 5], "traits": "Controlled • Sacrificial • Strategic"}, "Ichigo Kurosaki": {"name": "Ichigo Kurosaki", "series": "Bleach", "v": [7, 10, 7, 6, 9, 10, 8, 8, 5, 5], "traits": "Protective • Determined • Brave"}, "Rukia Kuchiki": {"name": "Rukia Kuchiki", "series": "Bleach", "v": [6, 9, 7, 7, 8, 9, 9, 8, 7, 5], "traits": "Composed • Loyal • Strong-willed"}, "Sōsuke Aizen": {"name": "Sōsuke Aizen", "series": "Bleach", "v": [4, 3, 10, 10, 3, 7, 8, 8, 10, 6], "traits": "Calculating • Ambitious • Controlled"}, "Kisuke Urahara": {"name": "Kisuke Urahara", "series": "Bleach", "v": [7, 8, 8, 10, 7, 7, 7, 10, 7, 10], "traits": "Inventive • Clever • Unpredictable"}, "Tanjiro Kamado": {"name": "Tanjiro Kamado", "series": "Demon Slayer", "v": [6, 10, 6, 7, 10, 9, 9, 8, 4, 6], "traits": "Compassionate • Resolute • Protective"}, "Giyu Tomioka": {"name": "Giyu Tomioka", "series": "Demon Slayer", "v": [5, 8, 6, 7, 6, 9, 10, 7, 8, 3], "traits": "Reserved • Disciplined • Steady"}, "Kyojuro Rengoku": {"name": "Kyojuro Rengoku", "series": "Demon Slayer", "v": [7, 10, 8, 5, 10, 10, 9, 8, 5, 6], "traits": "Uplifting • Courageous • Devoted"}, "Shinobu Kocho": {"name": "Shinobu Kocho", "series": "Demon Slayer", "v": [6, 8, 7, 9, 8, 8, 9, 9, 7, 8], "traits": "Precise • Intelligent • Composed"}, "Light Yagami": {"name": "Light Yagami", "series": "Death Note", "v": [3, 2, 10, 10, 3, 7, 9, 8, 10, 6], "traits": "Strategic • Ambitious • Controlling"}, "L Lawliet": {"name": "L Lawliet", "series": "Death Note", "v": [6, 3, 6, 10, 5, 6, 7, 9, 8, 8], "traits": "Analytical • Eccentric • Curious"}, "Walter White": {"name": "Walter White", "series": "Breaking Bad", "v": [3, 3, 10, 9, 3, 6, 8, 8, 9, 7], "traits": "Ambitious • Resourceful • Prideful"}, "Jesse Pinkman": {"name": "Jesse Pinkman", "series": "Breaking Bad", "v": [6, 8, 4, 5, 8, 7, 5, 8, 3, 5], "traits": "Emotional • Loyal • Human"}, "Gus Fring": {"name": "Gus Fring", "series": "Breaking Bad", "v": [2, 2, 10, 10, 4, 6, 10, 9, 10, 5], "traits": "Controlled • Strategic • Patient"}, "Jon Snow": {"name": "Jon Snow", "series": "Game of Thrones", "v": [6, 10, 7, 6, 9, 10, 9, 8, 5, 4], "traits": "Honorable • Loyal • Courageous"}, "Tyrion Lannister": {"name": "Tyrion Lannister", "series": "Game of Thrones", "v": [6, 7, 7, 10, 8, 7, 5, 10, 7, 9], "traits": "Witty • Intelligent • Adaptive"}, "Arya Stark": {"name": "Arya Stark", "series": "Game of Thrones", "v": [9, 9, 7, 7, 6, 10, 9, 10, 8, 6], "traits": "Independent • Determined • Resourceful"}, "Daenerys Targaryen": {"name": "Daenerys Targaryen", "series": "Game of Thrones", "v": [7, 7, 10, 6, 8, 10, 7, 8, 8, 6], "traits": "Driven • Charismatic • Visionary"}, "Eleven": {"name": "Eleven", "series": "Stranger Things", "v": [5, 9, 4, 5, 9, 10, 5, 8, 3, 6], "traits": "Protective • Sensitive • Brave"}, "Jim Hopper": {"name": "Jim Hopper", "series": "Stranger Things", "v": [4, 9, 6, 6, 8, 10, 8, 7, 6, 4], "traits": "Protective • Direct • Resilient"}, "Steve Harrington": {"name": "Steve Harrington", "series": "Stranger Things", "v": [6, 9, 5, 5, 9, 9, 7, 9, 3, 5], "traits": "Loyal • Protective • Adaptable"}, "Dustin Henderson": {"name": "Dustin Henderson", "series": "Stranger Things", "v": [7, 10, 5, 9, 9, 7, 5, 10, 3, 9], "traits": "Curious • Clever • Social"}, "Kendall Roy": {"name": "Kendall Roy", "series": "Succession", "v": [3, 4, 10, 8, 5, 6, 6, 7, 8, 7], "traits": "Driven • Strategic • Searching"}, "Shiv Roy": {"name": "Shiv Roy", "series": "Succession", "v": [5, 4, 9, 9, 5, 7, 7, 8, 8, 7], "traits": "Strategic • Independent • Ambitious"}, "Roman Roy": {"name": "Roman Roy", "series": "Succession", "v": [5, 5, 8, 7, 5, 5, 4, 9, 4, 9], "traits": "Witty • Reactive • Creative"}, "Logan Roy": {"name": "Logan Roy", "series": "Succession", "v": [2, 2, 10, 9, 3, 7, 9, 7, 10, 3], "traits": "Dominant • Strategic • Powerful"}, "The Professor": {"name": "The Professor", "series": "Money Heist", "v": [4, 10, 9, 10, 7, 6, 9, 10, 9, 9], "traits": "Methodical • Brilliant • Protective"}, "Tokyo": {"name": "Tokyo", "series": "Money Heist", "v": [9, 8, 7, 5, 7, 10, 4, 10, 3, 7], "traits": "Impulsive • Free • Fearless"}, "Berlin": {"name": "Berlin", "series": "Money Heist", "v": [4, 6, 8, 8, 4, 8, 8, 8, 8, 9], "traits": "Charismatic • Calculated • Unpredictable"}, "Jonas Kahnwald": {"name": "Jonas Kahnwald", "series": "Dark", "v": [5, 8, 7, 9, 9, 8, 7, 8, 4, 5], "traits": "Introspective • Determined • Emotional"}, "Martha Nielsen": {"name": "Martha Nielsen", "series": "Dark", "v": [6, 8, 7, 8, 8, 8, 7, 8, 4, 6], "traits": "Resilient • Curious • Independent"}, "Ulrich Nielsen": {"name": "Ulrich Nielsen", "series": "Dark", "v": [5, 7, 8, 6, 5, 9, 6, 7, 5, 4], "traits": "Driven • Impulsive • Determined"}, "Tommy Shelby": {"name": "Tommy Shelby", "series": "Peaky Blinders", "v": [3, 5, 10, 10, 5, 8, 9, 9, 10, 7], "traits": "Strategic • Controlled • Ambitious"}, "Arthur Shelby": {"name": "Arthur Shelby", "series": "Peaky Blinders", "v": [4, 8, 8, 4, 6, 10, 5, 7, 5, 4], "traits": "Fierce • Loyal • Volatile"}, "Polly Gray": {"name": "Polly Gray", "series": "Peaky Blinders", "v": [4, 8, 9, 8, 7, 8, 9, 8, 8, 7], "traits": "Sharp • Protective • Authoritative"}, "Assane Diop": {"name": "Assane Diop", "series": "Lupin", "v": [8, 8, 8, 10, 8, 8, 6, 10, 7, 10], "traits": "Clever • Charismatic • Resourceful"}, "Queen Elizabeth II (The Crown)": {"name": "Queen Elizabeth II (The Crown)", "series": "The Crown", "v": [3, 9, 7, 8, 7, 8, 10, 7, 9, 4], "traits": "Duty-bound • Composed • Responsible"}, "Iron Man": {"name": "Iron Man", "series": "Avengers: Endgame", "v": [8, 7, 9, 10, 7, 9, 7, 10, 7, 10], "traits": "Inventive • Bold • Self-sacrificing"}, "Captain America": {"name": "Captain America", "series": "Avengers: Endgame", "v": [6, 10, 7, 7, 10, 10, 10, 7, 5, 4], "traits": "Principled • Loyal • Courageous"}, "Thor": {"name": "Thor", "series": "Avengers: Endgame", "v": [8, 9, 7, 5, 8, 10, 7, 8, 4, 6], "traits": "Courageous • Warm • Powerful"}, "Black Widow": {"name": "Black Widow", "series": "Avengers: Endgame", "v": [5, 9, 7, 9, 7, 10, 10, 10, 8, 6], "traits": "Disciplined • Resourceful • Selfless"}, "Thanos": {"name": "Thanos", "series": "Avengers: Endgame", "v": [2, 2, 10, 9, 2, 8, 9, 8, 10, 4], "traits": "Driven • Controlled • Uncompromising"}, "Spider-Man": {"name": "Spider-Man", "series": "Spider-Man", "v": [8, 9, 6, 7, 10, 9, 7, 10, 3, 7], "traits": "Witty • Kind • Responsible"}, "Luke Skywalker": {"name": "Luke Skywalker", "series": "Star Wars", "v": [8, 9, 7, 7, 9, 10, 7, 8, 3, 6], "traits": "Hopeful • Brave • Compassionate"}, "Darth Vader": {"name": "Darth Vader", "series": "Star Wars", "v": [2, 5, 9, 7, 4, 9, 10, 6, 10, 3], "traits": "Intense • Powerful • Controlled"}, "Leia Organa": {"name": "Leia Organa", "series": "Star Wars", "v": [6, 10, 9, 8, 9, 10, 9, 8, 8, 6], "traits": "Leader • Loyal • Resolute"}, "Obi-Wan Kenobi": {"name": "Obi-Wan Kenobi", "series": "Star Wars", "v": [5, 10, 7, 9, 9, 9, 10, 8, 7, 6], "traits": "Wise • Disciplined • Compassionate"}, "Paul Atreides": {"name": "Paul Atreides", "series": "Dune", "v": [4, 7, 9, 10, 7, 9, 9, 9, 8, 6], "traits": "Visionary • Strategic • Burdened"}, "Lady Jessica": {"name": "Lady Jessica", "series": "Dune", "v": [4, 8, 9, 10, 8, 9, 10, 9, 9, 7], "traits": "Perceptive • Disciplined • Protective"}, "Michael Corleone": {"name": "Michael Corleone", "series": "The Godfather", "v": [2, 5, 10, 10, 4, 8, 10, 8, 10, 3], "traits": "Strategic • Controlled • Ruthless"}, "Vito Corleone": {"name": "Vito Corleone", "series": "The Godfather", "v": [3, 8, 9, 9, 7, 7, 9, 8, 9, 5], "traits": "Loyal • Calculated • Authoritative"}, "Batman": {"name": "Batman", "series": "The Dark Knight", "v": [5, 7, 9, 10, 6, 9, 10, 9, 9, 6], "traits": "Strategic • Disciplined • Determined"}, "The Joker": {"name": "The Joker", "series": "The Dark Knight", "v": [9, 2, 7, 8, 2, 7, 3, 10, 4, 10], "traits": "Chaotic • Unpredictable • Creative"}, "Cooper": {"name": "Cooper", "series": "Interstellar", "v": [7, 10, 7, 8, 9, 10, 7, 9, 4, 6], "traits": "Curious • Protective • Courageous"}, "Brand": {"name": "Brand", "series": "Interstellar", "v": [5, 8, 7, 9, 9, 8, 8, 9, 5, 7], "traits": "Idealistic • Intelligent • Empathetic"}, "Napoleon Bonaparte": {"name": "Napoleon Bonaparte", "series": "Historical", "v": [2, 2, 10, 9, 5, 9, 10, 9, 10, 7], "traits": "Ambitious • Strategic • Transformative"}};
+
+let current = 0;
+let answers = Array(quizData.length).fill(null);
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function startQuiz() {
+  current = 0;
+  answers.fill(null);
+  show('quiz');
+  renderQuestion();
+}
+function renderQuestion() {
+  const q = quizData[current];
+  document.getElementById('qnum').textContent = `Question ${current+1} of ${quizData.length}`;
+  const percent = Math.round((current / quizData.length) * 100);
+  document.getElementById('pct').textContent = `${percent}%`;
+  document.getElementById('fill').style.width = `${percent}%`;
+  document.getElementById('question').textContent = q.q;
+
+  const box = document.getElementById('options');
+  box.innerHTML = '';
+  q.options.forEach((o, i) => {
+    const el = document.createElement('div');
+    el.className = 'option' + (answers[current] === i ? ' selected' : '');
+    el.innerHTML = `<div class="badge">${String.fromCharCode(65+i)}</div><div class="option-text">${o.text}</div>`;
+    el.onclick = () => {
+      answers[current] = i;
+      renderQuestion();
+    };
+    box.appendChild(el);
+  });
+  document.getElementById('back').disabled = current === 0;
+  document.getElementById('next').innerHTML = current === quizData.length - 1
+    ? 'See My Top 6 <i class="fa-solid fa-chart-simple"></i>'
+    : 'Next <i class="fa-solid fa-arrow-right"></i>';
+}
+function backQuestion() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+function nextQuestion() {
+  if (answers[current] === null) {
+    alert('Please choose an answer before continuing.');
+    return;
+  }
+  if (current < quizData.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+function dot(a,b) {
+  let s=0, aa=0, bb=0;
+  for(let i=0;i<a.length;i++){s+=a[i]*b[i];aa+=a[i]*a[i];bb+=b[i]*b[i];}
+  return s/(Math.sqrt(aa)*Math.sqrt(bb));
+}
+function showResults() {
+  const user = Array(traitsCount()).fill(0);
+  answers.forEach((choice, qi) => {
+    const v = quizData[qi].vectors[choice];
+    v.forEach((n,i) => user[i] += n);
+  });
+  const scored = Object.entries(characterMeta).map(([key, c]) => {
+    const sim = dot(user, c.v);
+    return {key, ...c, sim};
+  }).sort((a,b) => b.sim-a.sim);
+
+  const top = scored.slice(0,6);
+  document.getElementById('winner').textContent = top[0].name;
+
+  // Turn the actual similarity gaps into varied, descending percentages.
+  // The exact values therefore change from quiz to quiz rather than repeating
+  // the same six percentages for every user.
+  const raw = top.map(c => c.sim);
+  const max = raw[0];
+  const min = raw[raw.length - 1];
+  const spread = Math.max(max - min, 0.000001);
+  const displayedScores = raw.map((value, i) => {
+    if (i === 0) return Math.min(96, Math.max(88, Math.round(89 + (value - min) / spread * 7)));
+    const normalized = (value - min) / spread;
+    const score = Math.round(42 + normalized * 45);
+    return Math.min(displayedScoresSafe(i), score);
+  });
+
+  function displayedScoresSafe(i) {
+    const floors = [88, 72, 61, 52, 44, 36];
+    return floors[i] || 30;
+  }
+
+  // Guarantee a visibly descending list while preserving natural variation.
+  for (let i = 1; i < displayedScores.length; i++) {
+    displayedScores[i] = Math.min(displayedScores[i], displayedScores[i - 1] - 1);
+  }
+
+  const list = document.getElementById('resultsList');
+  list.innerHTML = '';
+  top.forEach((c,i) => {
+    const pct = displayedScores[i];
+    const row = document.createElement('div');
+    row.className = 'card';
+    row.innerHTML = `
+      <div class="card-top">
+        <div><span class="rank">#${i+1}</span> <span class="name">${c.name}</span>
+        <div class="series">${c.series}</div></div>
+        <div class="match">${pct}%</div>
+      </div>
+      <div class="mini"><div style="width:${pct}%"></div></div>
+      <div class="traits">${c.traits}</div>`;
+    list.appendChild(row);
+  });
+  show('results');
+}
+function traitsCount() { return 10; }
+function restart() { show('landing'); }
+</script>
+</body>
+</html>
